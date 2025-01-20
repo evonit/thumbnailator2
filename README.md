@@ -2,7 +2,9 @@
 The source project has not been maintained for a long time, so this fork was created to facilitate the addition of new features and improvements.
 If you have any feature requests, modifications, or bug reports, please use the Issues section.
 
+for more details, check the [changes](changes.md)
 ---
+Source Project's READ.md
 
 _*June 28, 2023: Thumbnailator 0.4.20 has been released!
 See [Changes](https://github.com/coobird/thumbnailator/wiki/Changes) for details.*_

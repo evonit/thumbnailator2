@@ -1,7 +1,9 @@
 .classpath
 .project
 .settings
+.gradle
 .idea/
 thumbnailator.iml
 bin/
+build/
 target/

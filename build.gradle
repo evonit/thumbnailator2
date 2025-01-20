@@ -1,0 +1,122 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
+plugins {
+    id 'java'
+    id "com.vanniktech.maven.publish" version "0.30.0"
+    id 'signing'
+}
+
+group = 'net.evonit'
+version = '0.4.21'
+description = 'Thumbnailator2 - a thumbnail generation library for Java'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+
+configurations {
+    jaxDoclet
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+}
+
+tasks.withType(JavaCompile) {
+    options.debug = true
+    options.debugOptions.debugLevel = "lines"
+}
+
+tasks.javadoc {
+    title = "Thumbnailator API Documentation (Version ${project.version})"
+    source = sourceSets.main.allJava
+
+    options {
+        encoding = "UTF-8"
+        links "https://coobird.github.io/thumbnailator/javadoc/0.4.20/"
+        links "https://docs.oracle.com/javase/8/docs/api/"
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Specification-Title': 'Thumbnailator2',
+                'Specification-Version': project.version,
+                'Specification-Vendor': 'evonit.net',
+                'Implementation-Title': 'Thumbnailator2',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'evonit.net',
+                'Automatic-Module-Name': 'net.evonit.thumbnailator2'
+        )
+    }
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+    manifest {
+        attributes(
+                'Specification-Title': 'Thumbnailator2 sources',
+                'Specification-Version': project.version,
+                'Specification-Vendor': 'evonit.net',
+                'Implementation-Title': 'Thumbnailator2 sources',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'evonit.net'
+        )
+    }
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    coordinates("io.github.evonit", "thumbnailator2", project.version)
+
+    pom {
+        name = "thumbnailator2"
+        description = project.description
+        url = "https://github.com/evonit/thumbnailator2"
+        licenses {
+            license {
+                name = "MIT License"
+                url = "https://spdx.org/licenses/MIT.html"
+            }
+        }
+        developers {
+            developer {
+                id = "moon-light"
+                name = "Moon Light"
+                email = "yuie@evonit.net"
+                url = "https://evonit.net"
+            }
+        }
+        scm {
+            url = "https://github.com/evonit/thumbnailator2"
+            connection = "scm:git:git://github.com/evonit/thumbnailator2.git"
+            developerConnection = "scm:git:git@github.com/evonit/thumbnailator2.git"
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign publishing.publications
+}
+
+test {
+    compileTestJava {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    useJUnitPlatform()
+    maxHeapSize = '512m'
+    jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+
+}
